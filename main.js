@@ -3,6 +3,8 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const app = express();
+global.db = require('./database/db');
+require('dotenv').config();
 
 // Set the port
 const PORT = process.env.PORT || 3000;
