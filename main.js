@@ -31,14 +31,14 @@ app.get('/', (req, res) => {
 });
 
 // // Example route files (you'll modularize later)
-// const authRoutes = require('./routes/authRoutes');
-// const gameRoutes = require('./routes/gameRoutes');
-// const cartRoutes = require('./routes/cartRoutes');
+const authRoutes = require('./routes/auth/auth');
+const gameRoutes = require('./routes/game/game');
+const cartRoutes = require('./routes/cart/cart');
 
 // // Use routes
-// app.use('/auth', authRoutes);
-// app.use('/games', gameRoutes);
-// app.use('/cart', cartRoutes);
+app.use('/auth', authRoutes);
+app.use('/games', gameRoutes);
+app.use('/cart', cartRoutes);
 
 // 404 fallback
 app.use((req, res) => {
