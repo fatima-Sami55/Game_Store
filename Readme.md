@@ -21,7 +21,7 @@ The goal is to develop a Game Store platform with features like:
 
 ---
 
-## 📦 Project Deliverables
+## 📦 Project Details
 
 ### ✅ Database Design & Setup
 
