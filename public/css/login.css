@@ -1,0 +1,80 @@
+/* Reset browser defaults */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* General body styling */
+body {
+    min-height: 100vh;
+    background: #e9ecef;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Heading */
+h1 {
+    margin-bottom: 20px;
+    color: #222;
+}
+
+/* Form container */
+form {
+    background: #fff;
+    padding: 25px 35px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 350px;
+}
+
+/* Form fields spacing */
+form div {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Label styling */
+label {
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #444;
+}
+
+/* Input field styling */
+input {
+    padding: 10px;
+    border: 1px solid #bbb;
+    border-radius: 5px;
+    font-size: 15px;
+    transition: border-color 0.3s;
+}
+
+/* Focused input effect */
+input:focus {
+    border-color: #17a2b8;
+    outline: none;
+}
+
+/* Submit button */
+button {
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+/* Button hover */
+button:hover {
+    background-color: #0056b3;
+}

@@ -26,7 +26,7 @@ app.use(session({
 }));
 
 // Routes
-app.get('/', (req, res) => {
+app.get('/home', (req, res) => {
   res.render('home', { user: req.session.user || null });
 });
 
