@@ -31,7 +31,7 @@ router.post('/register', async (req, res) => {
       request.input('name', sql.VarChar(100), name);
       request.input('email', sql.VarChar(100), email);
       request.input('password', sql.VarChar(100), hashedPassword);
-      request.input('phone_number', sql.VarChar(15), phone_number);
+      request.input('phone_number', sql.VarChar(100), phone_number);
   
       await request.query(`
         INSERT INTO users (uuid, name, email, password, phone_number)
