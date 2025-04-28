@@ -36,7 +36,7 @@ const gameRoutes = require('./routes/game/game');
 const cartRoutes = require('./routes/cart/cart');
 
 // // Use routes
-app.use('/auth', authRoutes);
+app.use('/', authRoutes);
 app.use('/games', gameRoutes);
 app.use('/cart', cartRoutes);
 
