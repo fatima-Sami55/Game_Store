@@ -10,9 +10,12 @@ router.get('/login', (req, res) => {
   res.render("login");
 });
 
-
 router.post('/login', async (req, res) => {
   const { name, password } = req.body;
+
+  if (!name || !password) {
+    return res.status(400).send('⚠️ Please enter both username and password.');
+  }
 
   try {
     await poolConnect;
@@ -25,20 +28,18 @@ router.post('/login', async (req, res) => {
     `);
 
     const user = result.recordset[0];
-
     if (!user) {
-      return res.status(401).send('❌ Invalid name or password');
+      return res.status(401).send('❌ Invalid username');
     }
 
     const passwordMatch = await bcrypt.compare(password, user.password);
-
     if (!passwordMatch) {
-      return res.status(401).send('❌ Invalid name or password');
+      return res.status(401).send('❌ Invalid password');
     }
 
     req.session.user = {
       uuid: user.uuid,
-      name: user.name,
+      username: user.username,
       email: user.email,
     };
 
@@ -56,7 +57,7 @@ router.get('/logout', (req, res) => {
       console.error('❌ Logout Error:', err);
       return res.status(500).send('Error logging out');
     }
-    res.redirect('/login');
+    res.redirect('/home');
     console.log('✅ Logged out');
     
   }
@@ -89,7 +90,8 @@ router.post('/register', async (req, res) => {
       `); 
   
       console.log(`✅ Registered: ${name}`);
-      res.send(`User ${name} registered successfully!`);
+      //res.send(`User ${name} registered successfully!`);
+      res.redirect('/home')
     } catch (err) {
       console.error('❌ Registration Error:', err);
       res.status(500).send('Error registering user');
