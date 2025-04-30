@@ -51,21 +51,6 @@ router.post('/login', async (req, res) => {
 });
 
 
-<<<<<<< HEAD
-router.get('/logout', (req, res) => {
-  req.session.destroy((err) => {
-    if (err) {
-      console.error('❌ Logout Error:', err);
-      return res.status(500).send('Error logging out');
-    }
-    res.redirect('/login');
-    console.log('✅ Logged out');
-    
-  }
-  );
-})
-=======
->>>>>>> 3d128cba5dfb8542233c836579b13b50c65d853d
 
 // post requests
 router.post('/login', async (req, res) => {
