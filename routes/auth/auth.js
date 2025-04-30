@@ -50,47 +50,18 @@ router.post('/login', async (req, res) => {
   }
 });
 
-
-
-// post requests
-router.post('/login', async (req, res) => {
-  const { name, password } = req.body;
-
-  try {
-    await poolConnect;
-
-    const request = pool.request();
-    request.input('name', sql.VarChar(100), name);
-
-    const result = await request.query(`
-      SELECT * FROM users WHERE name = @name
-    `);
-
-    const user = result.recordset[0];
+router.get('/logout', (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.error('❌ Logout Error:', err);
+      return res.status(500).send('Error logging out');
+    }
+    res.redirect('/login');
+    console.log('✅ Logged out');
     
-    if (!user) {
-      return res.status(401).send('❌ Invalid name or password');
-    }
-
-    const passwordMatch = await bcrypt.compare(password, user.password);
-
-    if (!passwordMatch) {
-      return res.status(401).send('❌ Invalid name or password');
-    }
-
-    req.session.user = {
-      uuid: user.uuid,
-      name: user.name,
-      email: user.email,
-    };
-
-    console.log(`✅ Logged in: ${user.name}`);
-    res.redirect('/');
-  } catch (err) {
-    console.error('❌ Login Error:', err);
-    res.status(500).send('Internal Server Error');
   }
-});
+  );
+})
 
 router.get('/register', (req, res) => {
     res.render("register");
@@ -123,6 +94,6 @@ router.post('/register', async (req, res) => {
       console.error('❌ Registration Error:', err);
       res.status(500).send('Error registering user');
     }
-  });  
+});  
 
 module.exports = router;
