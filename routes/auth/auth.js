@@ -5,10 +5,53 @@ const { v4: uuidv4 } = require('uuid');
 const bcrypt = require('bcrypt');
 
 
+
 router.get('/login', (req, res) => {
   res.render("login");
-})
+});
 
+
+router.post('/login', async (req, res) => {
+  const { name, password } = req.body;
+
+  try {
+    await poolConnect;
+
+    const request = pool.request();
+    request.input('name', sql.VarChar(100), name);
+
+    const result = await request.query(`
+      SELECT * FROM users WHERE name = @name
+    `);
+
+    const user = result.recordset[0];
+
+    if (!user) {
+      return res.status(401).send('❌ Invalid name or password');
+    }
+
+    const passwordMatch = await bcrypt.compare(password, user.password);
+
+    if (!passwordMatch) {
+      return res.status(401).send('❌ Invalid name or password');
+    }
+
+    req.session.user = {
+      uuid: user.uuid,
+      name: user.name,
+      email: user.email,
+    };
+
+    console.log(`✅ Logged in: ${user.name}`);
+    res.redirect('/home');
+  } catch (err) {
+    console.error('❌ Login Error:', err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+
+<<<<<<< HEAD
 router.get('/logout', (req, res) => {
   req.session.destroy((err) => {
     if (err) {
@@ -21,6 +64,8 @@ router.get('/logout', (req, res) => {
   }
   );
 })
+=======
+>>>>>>> 3d128cba5dfb8542233c836579b13b50c65d853d
 
 // post requests
 router.post('/login', async (req, res) => {
