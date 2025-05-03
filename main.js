@@ -5,6 +5,7 @@
   const app = express();
   global.db = require('./database/db');
   require('dotenv').config();
+  const helmet = require('helmet'); 
 
   // Set the port
   const PORT = process.env.PORT || 3000;
@@ -24,6 +25,8 @@
     resave: false,
     saveUninitialized: false
   }));
+
+  app.use(helmet());
 
   // Routes
   app.get('/home', (req, res) => {
