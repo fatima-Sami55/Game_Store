@@ -1,13 +1,18 @@
 const express = require('express');
-const router = express.Router();
-const { pool, sql, poolConnect } = require('../../database/db');
+const { pool, sql , poolConnect } = require('../../database/db');
 const { v4: uuidv4 } = require('uuid');
+const router = express.Router();
 const bcrypt = require('bcrypt');
 
-
+//get requests
 router.get('/login', (req, res) => {
-  res.render("login");
+  res.render('login')
 })
+
+router.get('/register', (req, res) => {
+  res.render('register')
+}
+)
 
 router.get('/logout', (req, res) => {
   req.session.destroy((err) => {
@@ -15,37 +20,36 @@ router.get('/logout', (req, res) => {
       console.error('❌ Logout Error:', err);
       return res.status(500).send('Error logging out');
     }
-    res.redirect('/login');
+    res.redirect('/');
     console.log('✅ Logged out');
-    
   }
   );
 })
 
 // post requests
 router.post('/login', async (req, res) => {
-  const { name, password } = req.body;
+  const { email, password } = req.body;
 
   try {
     await poolConnect;
 
     const request = pool.request();
-    request.input('name', sql.VarChar(100), name);
+    request.input('email', sql.VarChar(100), email);
 
     const result = await request.query(`
-      SELECT * FROM users WHERE name = @name
+      SELECT * FROM users WHERE email = @email
     `);
 
     const user = result.recordset[0];
     
     if (!user) {
-      return res.status(401).send('❌ Invalid name or password');
+      return res.status(401).send('❌ Invalid email or password');
     }
 
     const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (!passwordMatch) {
-      return res.status(401).send('❌ Invalid name or password');
+      return res.status(401).send('❌ Invalid email or password');
     }
 
     req.session.user = {
@@ -54,7 +58,7 @@ router.post('/login', async (req, res) => {
       email: user.email,
     };
 
-    console.log(`✅ Logged in: ${user.name}`);
+    console.log(`✅ Logged in: ${user.email}`);
     res.redirect('/');
   } catch (err) {
     console.error('❌ Login Error:', err);
@@ -62,37 +66,31 @@ router.post('/login', async (req, res) => {
   }
 });
 
-router.get('/register', (req, res) => {
-    res.render("register");
-})
+router.post('/register', async(req, res) => {
+  const { name, email, password, phone_number } = req.body;
+  const userid = uuidv4();
+  const hashedPassword = await bcrypt.hash(password, 10);
+  try{
+    await poolConnect;
+    const request = pool.request();
+    request.input('uuid', sql.UniqueIdentifier, userid)
+    request.input('name', sql.VarChar(100), name);
+    request.input('email', sql.VarChar(100), email);
+    request.input('password', sql.VarChar(100), hashedPassword);
+    request.input('phone_number', sql.VarChar(15), phone_number);
 
-router.post('/register', async (req, res) => {
-    const { name, email, phone_number, password } = req.body;
-    const userId = uuidv4(); 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    await request.query(`
+      INSERT INTO users (uuid, name, email, password, phone_number)
+      VALUES (@uuid, @name, @email, @password, @phone_number)
+    `);
 
-  
-    try {
-      await poolConnect;
-  
-      const request = pool.request();
-      request.input('uuid', sql.UniqueIdentifier, userId);
-      request.input('name', sql.VarChar(100), name);
-      request.input('email', sql.VarChar(100), email);
-      request.input('password', sql.VarChar(100), hashedPassword);
-      request.input('phone_number', sql.VarChar(100), phone_number);
-  
-      await request.query(`
-        INSERT INTO users (uuid, name, email, password, phone_number)
-        VALUES (@uuid, @name, @email, @password, @phone_number)
-      `); 
-  
-      console.log(`✅ Registered: ${name}`);
-      res.send(`User ${name} registered successfully!`);
-    } catch (err) {
-      console.error('❌ Registration Error:', err);
-      res.status(500).send('Error registering user');
-    }
-  });  
+    console.log(`Registered: ${name}, successfully`);
+    res.redirect('/');
+  } catch (err) {
+    console.error('❌ Registration Error:', err);
+    res.status(500).send('Error registering user');
+  }
+}
+)
 
 module.exports = router;
