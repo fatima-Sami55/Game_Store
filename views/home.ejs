@@ -3,33 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Store | Home</title>
-    <link rel="stylesheet" href="/css/home.css">
-    <link rel="icon" type="image/png" href="/images/logo.png">
+    <title>GameVault - Ultimate Game Store</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/home.css">
 </head>
 <body>
-    <header>
-        <div class="logo-title">
-            <img src="/images/logo.png" alt="Game Store Logo">
-            <h1>Game Store</h1>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="/" class="logo">
+            <span class="logo-icon">🎮</span>
+            Game<span>Vault</span>
+        </a>
+        
+        <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="#">Games</a></li>
+            <li><a href="#">New Releases</a></li>
+            <li><a href="#">Deals</a></li>
+            <li><a href="#">Support</a></li>
+        </ul>
+        
+        <div class="auth-buttons">
+            <% if (locals.user) { %>
+                <!-- User is logged in, show welcome message and logout button -->
+                <span class="user-welcome">Welcome, <%= user.name %></span>
+                <a href="/logout" class="btn btn-login">Logout</a>
+            <% } else { %>
+                <!-- User is not logged in, show login and register buttons -->
+                <a href="/login" class="btn btn-login">Login</a>
+                <a href="/register" class="btn btn-register">Register</a>
+            <% } %>
         </div>
-        <nav>
-            <a href="/login">Login</a>
-            <a href="/register">Register</a>
-            <a href="/shop">Shop Games</a>
-        </nav>
-    </header>
-
-    <main>
-        <section class="hero">
-            <h2>Welcome to the Ultimate Gaming Hub</h2>
-            <p>Buy, sell, and explore the latest and greatest games.</p>
-            <a href="/shop" class="btn">Start Shopping</a>
-        </section>
-    </main>
-
-    <footer>
-        <p>&copy; 2025 Game Store. All rights reserved.</p>
-    </footer>
+        
+        <div class="hamburger">
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">Discover Your Next <span>Gaming</span> Adventure</h1>
+            <p class="hero-subtitle">Explore thousands of games across all platforms. From AAA titles to indie gems, find your perfect match with exclusive deals and instant downloads.</p>
+            <div class="cta-buttons">
+                <a href="/games" class="btn btn-register btn-cta">Browse Games</a>
+                <a href="/deals" class="btn btn-secondary">View Deals</a>
+            </div>
+        </div>
+        
+        <div class="hero-image">
+            <img src="https://5.imimg.com/data5/SELLER/Default/2023/8/338900660/MI/FV/IV/195687344/gaming-console.jpg" alt="Gaming Console">
+        </div>
+        
+        <!-- Decorative elements -->
+        <div class="circle circle-1"></div>
+        <div class="circle circle-2"></div>
+    </section>
+    
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+        
+        // Improved mobile menu toggle
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+        const body = document.querySelector('body');
+        
+        hamburger.addEventListener('click', function() {
+            // Toggle navigation
+            navLinks.classList.toggle('nav-active');
+            
+            // Toggle body scroll
+            if (navLinks.classList.contains('nav-active')) {
+                body.style.overflow = 'hidden'; // Prevent scrolling when menu is open
+            } else {
+                body.style.overflow = 'auto'; // Allow scrolling when menu is closed
+            }
+        });
+        
+        // Close menu when clicking on a link
+        const navItems = document.querySelectorAll('.nav-links a');
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                navLinks.classList.remove('nav-active');
+                body.style.overflow = 'auto';
+            });
+        });
+    </script>
 </body>
 </html>
