@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <a href="/" class="logo">
+            <div class="logo-content">
+                <div class="logo-text">GameVault</div>
+            </div>
+            <span>Admin</span>
+        </a>
+        <ul class="nav-links">
+            <li class="active"><a href="/admin-dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+            <li><a href="/admin-users"><i class="fas fa-users"></i> Users</a></li>
+            <li><a href="/admin-settings"><i class="fas fa-cog"></i> Settings</a></li>
+            <li><a href="/admin-logs"><i class="fas fa-clipboard-list"></i> Logs</a></li>
+            <li class="logout"><a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+        <div class="sidebar-footer">
+            <p>&copy; 2025 Game Vault Admin</p>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="admin-header">
+            <div class="header-left">
+                <h1>Admin Dashboard</h1>
+                <p class="date-time"><%= currentDate %> | <%= currentTime %></p>
+            </div>
+            <div class="header-right">
+                <div class="search-box">
+                    <input type="text" placeholder="Search...">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="user-welcome">
+                    <img src="/images/pfp.png" alt="Admin" class="avatar">
+                    <span>Welcome back, <%= user.name || 'Admin' %>!</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-summary">
+            <h2>Overview</h2>
+            <p>Here's what's happening with your application today.</p>
+        </div>
+
+        <div class="cards">
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="card-content">
+                    <div class="card-title">Total Users</div>
+                    <div class="card-info"><%= stats.totalUsers %></div>
+                    <div class="card-trend up">
+                        <i class="fas fa-arrow-up"></i> 12% from last week
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-desktop"></i>
+                </div>
+                <div class="card-content">
+                    <div class="card-title">Active Sessions</div>
+                    <div class="card-info"><%= stats.activeSessions %></div>
+                    <div class="card-trend up">
+                        <i class="fas fa-arrow-up"></i> 5% from yesterday
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <div class="card-content">
+                    <div class="card-title">New Registrations</div>
+                    <div class="card-info"><%= stats.newRegistrations %></div>
+                    <div class="card-trend down">
+                        <i class="fas fa-arrow-down"></i> 3% from yesterday
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+                <div class="card-content">
+                    <div class="card-title">Total Revenue</div>
+                    <div class="card-info">$<%= stats.totalRevenue.toLocaleString() %></div>
+                    <div class="card-trend up">
+                        <i class="fas fa-arrow-up"></i> 8% from last month
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="recent-activity">
+            <h2>Recent Activity</h2>
+            <div class="activity-list">
+                <% activities.forEach(activity => { %>
+                    <div class="activity-item">
+                        <div class="activity-icon"><i class="fas fa-<%= activity.type %>"></i></div>
+                        <div class="activity-details">
+                            <h3><%= activity.title %></h3>
+                            <p><%= activity.message %></p>
+                            <span class="activity-time"><%= activity.time %></span>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hamburger Menu -->
+    <div class="hamburger" onclick="toggleSidebar()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            document.querySelector('.sidebar').classList.toggle('active');
+            document.querySelector('.main-content').classList.toggle('sidebar-active');
+            document.querySelector('.hamburger').classList.toggle('active');
+        }
+    </script>
+</body>
+</html>

@@ -18,9 +18,12 @@
         <ul class="nav-links">
             <li><a href="/">Home</a></li>
             <li><a href="#">Games</a></li>
-            <li><a href="#">New Releases</a></li>
             <li><a href="#">Deals</a></li>
             <li><a href="#">Support</a></li>
+            <% if (user && user.role === 'admin') { %>
+                <li><a href="/admin-dashboard">Dashboard</a></li>
+            <% } %>
+            
         </ul>
         
         <div class="auth-buttons">
@@ -54,7 +57,7 @@
         </div>
         
         <div class="hero-image">
-            <img src="https://5.imimg.com/data5/SELLER/Default/2023/8/338900660/MI/FV/IV/195687344/gaming-console.jpg" alt="Gaming Console">
+            <img src="/images/hero-image.png" alt="Gaming Console">
         </div>
         
         <!-- Decorative elements -->
@@ -101,3 +104,4 @@
     </script>
 </body>
 </html>
+
