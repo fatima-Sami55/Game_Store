@@ -1,4 +1,4 @@
 .env
 node_modules/
 schema.txt
-images/pfp.png
+public/images/pfp.png
