@@ -26,29 +26,29 @@ router.get('/logout', (req, res) => {
   );
 })
 
+router.get( '/admin-dashboard', (req, res)  => {
+    res.render('adminDashboard');
+})
+
 // post requests
+
+// ================== LOGIN ==================
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
+  if (!email?.trim() || !password) {
+    return res.status(400).send('❌ Email and password are required.');
+  }
+
   try {
     await poolConnect;
-
     const request = pool.request();
-    request.input('email', sql.VarChar(100), email);
+    request.input('email', sql.VarChar(100), email.trim());
 
-    const result = await request.query(`
-      SELECT * FROM users WHERE email = @email
-    `);
-
+    const result = await request.query(`SELECT * FROM users WHERE email = @email`);
     const user = result.recordset[0];
-    
-    if (!user) {
-      return res.status(401).send('❌ Invalid email or password');
-    }
 
-    const passwordMatch = await bcrypt.compare(password, user.password);
-
-    if (!passwordMatch) {
+    if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).send('❌ Invalid email or password');
     }
 
@@ -56,48 +56,68 @@ router.post('/login', async (req, res) => {
       uuid: user.uuid,
       name: user.name,
       email: user.email,
+      role: user.role 
     };
 
-    console.log(`✅ Logged in: ${user.email}`);
-    res.redirect('/');
+    console.log(`✅ Logged in as: ${user.email}`);
+    
+    // Redirect to Admin Dashboard if user is an admin
+    if (user.role === 'admin') {
+      return res.redirect('/admin-dashboard'); 
+    }
+
+    // Redirect to the home page for other users
+    res.redirect('/home');
   } catch (err) {
     console.error('❌ Login Error:', err);
     res.status(500).send('Internal Server Error');
   }
 });
 
-router.post('/register', async(req, res) => {
+// ================== REGISTER ==================
+router.post('/register', async (req, res) => {
   const { name, email, password, phone_number } = req.body;
-  const userid = uuidv4();
+
+  if (!name?.trim() || !email?.trim() || !password || !phone_number?.trim()) {
+    return res.status(400).send('❌ All fields are required.');
+  }
+
+  const userId = uuidv4();
   const hashedPassword = await bcrypt.hash(password, 10);
+
   try {
     await poolConnect;
+
     const request = pool.request();
-    request.input('uuid', sql.UniqueIdentifier, userid);
-    request.input('name', sql.VarChar(100), name);
-    request.input('email', sql.VarChar(100), email);
+    request.input('uuid', sql.UniqueIdentifier, userId);
+    request.input('name', sql.VarChar(100), name.trim());
+    request.input('email', sql.VarChar(100), email.trim());
     request.input('password', sql.VarChar(100), hashedPassword);
-    request.input('phone_number', sql.VarChar(15), phone_number);
+    request.input('phone_number', sql.VarChar(15), phone_number.trim());
+    request.input('role', sql.VarChar(10), 'user'); // 👈 default role
 
     await request.query(`
-      INSERT INTO users (uuid, name, email, password, phone_number)
-      VALUES (@uuid, @name, @email, @password, @phone_number)
+      INSERT INTO users (uuid, name, email, password, phone_number, role)
+      VALUES (@uuid, @name, @email, @password, @phone_number, @role)
     `);
 
-    // ✅ Log the user in right after registration
+    // Auto login
     req.session.user = {
-      uuid: userid,
-      name: name,
-      email: email,
+      uuid: userId,
+      name: name.trim(),
+      email: email.trim(),
+      role: 'user'
     };
 
-    console.log(`✅ Registered & logged in: ${name}`);
+    console.log(`✅ Registered & auto-logged in: ${email}`);
     res.redirect('/');
   } catch (err) {
+    if (err.originalError?.info?.number === 2627) {
+      return res.status(409).send('⚠️ Email already exists.');
+    }
     console.error('❌ Registration Error:', err);
-    res.status(500).send('Error registering user');
+    res.status(500).send('Error registering user.');
   }
 });
-
 
 module.exports = router;

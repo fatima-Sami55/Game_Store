@@ -1,33 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
-    <link rel="stylesheet" href="css/register-styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register</title>
+  <link rel="stylesheet" href="css/register-styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
 </head>
 <body>
-    <h1>Register</h1>
-    <form action="/register" method="POST">
-        <div>
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="name" required>
-        </div>
-        <div>
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
-        </div>
-        <div>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-        </div>
-        <div>
-            <label for="phone-number">Phone Number: </label>
-            <input type="text" id="phone-number" name="phone_number" required  placeholder="1234-567890">
-        </div>
-        <button type="submit">Register</button>
-    </form>
-    <p>Already have an account? <a href="/login">Login here</a></p>
+  <h1>Register</h1>
+  <form action="/register" method="POST" onsubmit="return validateForm()">
+    <div>
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="name" required />
+    </div>
+    <div>
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required />
+    </div>
+    <div>
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required minlength="6" />
+    </div>
+    <div>
+      <label for="phone-number">Phone Number: </label>
+      <input
+        type="text"
+        id="phone-number"
+        name="phone_number"
+        required
+        pattern="\d{11}"
+        maxlength="11"
+        placeholder="e.g. 03001234567"
+      />
+    </div>
+    <button type="submit">Register</button>
+  </form>
+  <p>Already have an account? <a href="/login">Login here</a></p>
+
+  <script>
+    function validateForm() {
+      const username = document.getElementById('username').value.trim();
+      const phone = document.getElementById('phone-number').value.trim();
+      const password = document.getElementById('password').value;
+
+      if (!/^[A-Za-z\s]{3,}$/.test(username)) {
+        alert('⚠️ Username must be at least 3 letters long and only contain letters.');
+        return false;
+      }
+
+      if (!/^\d{11}$/.test(phone)) {
+        alert('⚠️ Phone number must be exactly 11 digits.');
+        return false;
+      }
+
+      if (password.length < 6) {
+        alert('⚠️ Password must be at least 6 characters.');
+        return false;
+      }
+
+      return true;
+    }
+  </script>
 </body>
 </html>
