@@ -18,9 +18,12 @@
         <ul class="nav-links">
             <li><a href="/">Home</a></li>
             <li><a href="#">Games</a></li>
-            <li><a href="#">New Releases</a></li>
             <li><a href="#">Deals</a></li>
             <li><a href="#">Support</a></li>
+            <% if (user && user.role === 'admin') { %>
+                <li><a href="/admin-dashboard">Dashboard</a></li>
+            <% } %>
+            
         </ul>
         
         <div class="auth-buttons">

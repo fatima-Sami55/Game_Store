@@ -27,7 +27,53 @@ router.get('/logout', (req, res) => {
 })
 
 router.get( '/admin-dashboard', (req, res)  => {
-    res.render('adminDashboard');
+  const user = req.user || { name: 'Admin' };
+  const now = new Date();
+  const currentDate = now.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+  });
+  const currentTime = now.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit'
+  });
+
+  const stats = {
+      totalUsers: 1250,
+      activeSessions: 35,
+      newRegistrations: 10,
+      totalRevenue: 12450
+  };
+
+  const activities = [
+      {
+          type: "user-plus",
+          title: "New User Registration",
+          message: "John Doe registered a new account",
+          time: "10 minutes ago"
+      },
+      {
+          type: "shopping-cart",
+          title: "New Purchase",
+          message: "Sarah Smith purchased Premium Plan",
+          time: "45 minutes ago"
+      },
+      {
+          type: "exclamation-triangle",
+          title: "System Alert",
+          message: "Server load reached 85%",
+          time: "2 hours ago"
+      }
+  ];
+
+  res.render('adminDashboard', {
+      user,
+      stats,
+      activities,
+      currentDate,
+      currentTime
+  });
 })
 
 // post requests
