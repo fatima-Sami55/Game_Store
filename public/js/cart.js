@@ -144,10 +144,30 @@ async function removeItem(pid) {
     }
 }
 
+async function clearCart() {
+        try {
+            const response = await fetch('/cart/clear', {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                fetchCart();
+                updateCartCount();
+                showSuccess('Cart cleared successfully!');
+            } else {
+                showError('Failed to clear cart');
+            }
+        } catch (error) {
+            console.error('Error clearing cart:', error);
+            showError('Failed to clear cart');
+        }
+    }
+
 // Checkout
 function checkout() {
     // Implement checkout logic here
     showSuccess('Checkout functionality coming soon!');
+    clearCart();
 }
 
 // Update cart count in navbar
