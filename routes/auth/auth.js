@@ -77,6 +77,29 @@ router.get( '/admin-dashboard', isAuthenticated, isAdmin, (req, res)  => {
   });
 })
 
+router.get('/admin-user', isAuthenticated, isAdmin, async (req, res) => {
+    try {
+        await poolConnect; // Ensures DB connection is ready
+
+        const result = await pool.request().query(`
+            SELECT uuid, name, email, role, phone_number
+            FROM Users
+        `);
+
+        const users = result.recordset; // This will contain your users
+
+        res.render('admin-user', {
+            users,
+            user: req.session.user
+        });
+
+    } catch (err) {
+        console.error('❌ Error fetching users:', err);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+
 // post requests
 
 // ================== LOGIN ==================

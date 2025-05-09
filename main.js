@@ -28,19 +28,28 @@
   }));
 
   // Configure Helmet with CSP
-  app.use(helmet({
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", "'unsafe-inline'"],
-        styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-        fontSrc: ["'self'", "https://fonts.gstatic.com"],
-        imgSrc: ["'self'", "data:", "https:"],
-        connectSrc: ["'self'"]
-      }
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'"],
+      styleSrc: [
+        "'self'",
+        "'unsafe-inline'",
+        "https://fonts.googleapis.com",
+        "https://cdnjs.cloudflare.com"
+      ],
+      fontSrc: [
+        "'self'",
+        "https://fonts.gstatic.com",
+        "https://cdnjs.cloudflare.com" // 👈 Add this too for fonts if needed
+      ],
+      imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'"]
     }
-  }));
-  
+  }
+}));
+
   const corsOptions = {
     origin: 'http://localhost:3000', 
     methods: ['GET', 'POST'],
@@ -58,11 +67,13 @@
   const authRoutes = require('./routes/auth/auth');
   const gameRoutes = require('./routes/game/game');
   const cartRoutes = require('./routes/cart/cart');
+  const supportRoute = require('./routes/support/support');
 
   // // Use routes
   app.use('/', authRoutes);
   app.use('/games', gameRoutes);
   app.use('/cart', cartRoutes);
+  app.use('/support', supportRoute);
 
   app.get('/', (req, res) => {
     res.redirect('/home'); // or directly render the homepage
