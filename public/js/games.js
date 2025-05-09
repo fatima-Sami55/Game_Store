@@ -90,7 +90,7 @@ async function addToCart() {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                pid: currentGame.pid,
+                pid: currentGame.pid.toString(),
                 quantity: quantity
             })
         });
@@ -100,7 +100,8 @@ async function addToCart() {
             showSuccess('Game added to cart successfully');
             updateCartCount();
         } else {
-            showError('Failed to add game to cart');
+            const errorData = await response.json();
+            showError(errorData.error || 'Failed to add game to cart');
         }
     } catch (error) {
         console.error('Error adding to cart:', error);

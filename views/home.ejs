@@ -43,7 +43,7 @@
                 <% if (locals.user) { %>
                     <!-- User is logged in, show welcome message and logout button -->
                     <span class="user-welcome">Welcome, <%= user.name %></span>
-                    <form action="/logout" method="POST" class="logout-form">
+                    <form action="/logout" method="get" class="logout-form">
                         <button type="submit" class="btn btn-login">Logout</button>
                     </form>
                 <% } else { %>
