@@ -141,7 +141,7 @@ router.post('/register',redirectIfAuthenticated, async (req, res) => {
     request.input('email', sql.VarChar(100), email.trim());
     request.input('password', sql.VarChar(100), hashedPassword);
     request.input('phone_number', sql.VarChar(15), phone_number.trim());
-    request.input('role', sql.VarChar(10), 'user'); // 👈 default role
+    request.input('role', sql.VarChar(20), 'user'); // 👈 default role
 
     await request.query(`
       INSERT INTO users (uuid, name, email, password, phone_number, role)
