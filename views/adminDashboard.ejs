@@ -20,6 +20,7 @@
         </a>
         <ul class="nav-links">
             <li class="active"><a href="/admin-dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+            <li><a href="/home"><i class="fas fa-home"></i> Home</a></li>
             <li><a href="/admin-users"><i class="fas fa-users"></i> Users</a></li>
             <li><a href="/admin-settings"><i class="fas fa-cog"></i> Settings</a></li>
             <li><a href="/admin-logs"><i class="fas fa-clipboard-list"></i> Logs</a></li>
@@ -38,10 +39,10 @@
                 <p class="date-time"><%= currentDate %> | <%= currentTime %></p>
             </div>
             <div class="header-right">
-                <div class="search-box">
+                <!-- <div class="search-box">
                     <input type="text" placeholder="Search...">
                     <i class="fas fa-search"></i>
-                </div>
+                </div> -->
                 <div class="user-welcome">
                     <img src="/images/pfp.png" alt="Admin" class="avatar">
                     <span>Welcome back, <%= user.name || 'Admin' %>!</span>

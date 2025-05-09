@@ -3,30 +3,31 @@ const { pool, sql , poolConnect } = require('../../database/db');
 const { v4: uuidv4 } = require('uuid');
 const router = express.Router();
 const bcrypt = require('bcrypt');
+const { isAuthenticated, isAdmin, redirectIfAuthenticated } = require('../../middleware/authChecks');
 
 //get requests
-router.get('/login', (req, res) => {
+router.get('/login',redirectIfAuthenticated, (req, res) => {
   res.render('login')
 })
 
-router.get('/register', (req, res) => {
+router.get('/register',redirectIfAuthenticated, (req, res) => {
   res.render('register')
 }
 )
 
-router.get('/logout', (req, res) => {
+router.get('/logout', isAuthenticated, (req, res) => {
   req.session.destroy((err) => {
     if (err) {
       console.error('❌ Logout Error:', err);
       return res.status(500).send('Error logging out');
     }
-    res.redirect('/');
+    res.redirect('/');  // Redirect after logout
     console.log('✅ Logged out');
-  }
-  );
-})
+  });
+});
 
-router.get( '/admin-dashboard', (req, res)  => {
+
+router.get( '/admin-dashboard', isAuthenticated, isAdmin, (req, res)  => {
   const user = req.user || { name: 'Admin' };
   const now = new Date();
   const currentDate = now.toLocaleDateString('en-US', {
@@ -79,7 +80,7 @@ router.get( '/admin-dashboard', (req, res)  => {
 // post requests
 
 // ================== LOGIN ==================
-router.post('/login', async (req, res) => {
+router.post('/login',redirectIfAuthenticated, async (req, res) => {
   const { email, password } = req.body;
 
   if (!email?.trim() || !password) {
@@ -121,7 +122,7 @@ router.post('/login', async (req, res) => {
 });
 
 // ================== REGISTER ==================
-router.post('/register', async (req, res) => {
+router.post('/register',redirectIfAuthenticated, async (req, res) => {
   const { name, email, password, phone_number } = req.body;
 
   if (!name?.trim() || !email?.trim() || !password || !phone_number?.trim()) {

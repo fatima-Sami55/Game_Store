@@ -6,6 +6,7 @@
   global.db = require('./database/db');
   require('dotenv').config();
   const helmet = require('helmet'); 
+  const cors = require('cors');
 
   // Set the port
   const PORT = process.env.PORT || 3000;
@@ -28,6 +29,13 @@
 
   app.use(helmet());
   
+  const corsOptions = {
+    origin: 'http://localhost:3000', 
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type'],
+  };
+  
+  app.use(cors(corsOptions));
 
   // Routes
   app.get('/home', (req, res) => {
