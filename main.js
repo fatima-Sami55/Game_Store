@@ -39,11 +39,16 @@
   const authRoutes = require('./routes/auth/auth');
   const gameRoutes = require('./routes/game/game');
   const cartRoutes = require('./routes/cart/cart');
+  const orderRoutes = require('./routes/order/order.js');
+  const paymentRoutes = require('./routes/payment/payment.js');
+
 
   // // Use routes
   app.use('/', authRoutes);
   app.use('/games', gameRoutes);
   app.use('/cart', cartRoutes);
+  app.use('/order', orderRoutes);
+  app.use('/payment', paymentRoutes);
 
   app.get('/', (req, res) => {
     res.redirect('/home'); // or directly render the homepage

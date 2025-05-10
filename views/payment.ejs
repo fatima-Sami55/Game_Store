@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameVault - Payment</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/payment.css">
+
+    <style>
+    .error-message {
+      color: red;
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+
+    <!-- Navbar (same as in order.ejs) -->
+    <nav class="navbar">
+        <a href="/" class="logo">
+            <span class="logo-icon">🎮</span>
+            Game<span>Vault</span>
+        </a>
+        
+        <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/games">Games</a></li>
+            <li><a href="#">Deals</a></li>
+            <li><a href="#">Support</a></li>
+            
+            <% if (user && user.role === 'admin') { %>
+                <li><a href="/admin-dashboard">Dashboard</a></li>
+            <% } %>
+        </ul>
+
+        <div class="nav-actions">
+           
+            
+            <div class="auth-buttons">
+                <% if (locals.user) { %>
+                    <span class="user-welcome">Welcome, <%= user.name %></span>
+                    <a href="/logout" class="btn btn-login">Logout</a>
+                <% } else { %>
+                    <a href="/login" class="btn btn-login">Login</a>
+                    <a href="/register" class="btn btn-register">Register</a>
+                <% } %>
+            </div>
+        </div>
+
+        <div class="hamburger">
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
+        </div>
+    </nav>
+
+    <!-- Payment Section -->
+  <section class="orders-section">
+    <div class="container">
+        <h1 class="section-title">Payment</h1>
+        <p class="total-amount">Total Amount: <strong>
+         $<%= !isNaN(Number(totalAmount)) ? Number(totalAmount).toFixed(2) : '0.00' %>
+
+        </strong></p>
+
+
+        <form action="/payment/complete" method="POST" class="payment-form">
+            <input type="hidden" name="billId" value="<%= billId %>">
+            <input type="hidden" name="totalAmount" value="<%= totalAmount %>">
+
+
+            <div class="form-group">
+                <label>Select Card Type:</label>
+                <div class="form-control" style="display: flex; gap: 1rem; margin-top: 0.5rem;">
+                    <label>
+                        <input type="radio" name="cardType" value="Visa" required>
+                        Visa
+                    </label>
+                    <label>
+                        <input type="radio" name="cardType" value="MasterCard">
+                        MasterCard
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="cardNumber">Card Number:</label>
+                <input type="text" id="cardNumber" name="cardNumber" required class="form-control" maxlength="16" placeholder="Enter 16-digit card number">
+            </div>
+
+            <div class="form-group">
+                <label for="expiryDate">Expiry Date:</label>
+                 <input type="date" id="expiryDate" name="expiryDate" required min="">
+
+
+            </div>
+
+            <div class="form-group">
+                <label for="cvc">CVC:</label>
+                <input type="password" id="cvc" name="cvc" ...> <!-- changed from cvv -->
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <button type="submit" class="btn btn-confirm-order">Pay</button>
+            </div>
+            <% if (typeof message !== 'undefined' && message) { %>
+         <div class="error-message"><%= message %></div>
+        <% } %>
+
+        </form>
+    </div>
+</section>
+
+
+    <script>
+        async function updateCartCount() {
+            try {
+                const response = await fetch('/cart/cart');
+                const items = await response.json();
+                const count = items.reduce((total, item) => total + item.quantity, 0);
+                document.getElementById('cart-count').textContent = count;
+            } catch (error) {
+                console.error('Error updating cart count:', error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', updateCartCount);
+    </script>
+    <script>
+    function setExpiryMinDate() {
+        const today = new Date();
+        today.setMonth(today.getMonth() + 1); // one month ahead
+
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+
+        const minDate = `${year}-${month}-${day}`;
+        document.getElementById('expiryDate').setAttribute('min', minDate);
+    }
+
+    function validateCardForm(e) {
+    const cardNumber = document.getElementById('cardNumber').value;
+    const cvc = document.getElementById('cvc').value;
+    const expiryDate = new Date(document.getElementById('expiryDate').value);
+    const minExpiry = new Date();
+    minExpiry.setMonth(minExpiry.getMonth() + 1);
+
+    if (!/^\d{16}$/.test(cardNumber)) {
+        alert("Card number must be exactly 16 digits.");
+        e.preventDefault();
+    } else if (!/^\d{3,4}$/.test(cvc)) {
+        alert("CVC must be 3 or 4 digits.");
+        e.preventDefault();
+    } else if (expiryDate < minExpiry) {
+        alert("Expiry date must be at least one month in the future.");
+        e.preventDefault();
+    }
+}
+
+</script>
+
+</body>
+</html>
