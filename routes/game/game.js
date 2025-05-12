@@ -15,7 +15,7 @@ router.get('/games', async (req, res) => {
         let query = `
             SELECT pid, name, description, price, genre, status, img
             FROM product
-            WHERE status = 'Available'
+            WHERE status = 'available'
         `;
         
         const params = [];

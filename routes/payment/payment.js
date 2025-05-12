@@ -79,27 +79,43 @@ if (repeatedDigits.test(cardNumber)) {
     }
         
 
-    // Save card details
+    // First get the latest order ID for this user
+    const orderResult = await pool.request()
+        .input('userId', sql.UniqueIdentifier, user)
+        .query(`
+            SELECT TOP 1 o_id
+            FROM orders
+            WHERE user_id = @userId
+            ORDER BY o_id DESC
+        `);
+
+    if (orderResult.recordset.length === 0) {
+        throw new Error('No order found for this user');
+    }
+
+    const orderId = orderResult.recordset[0].o_id;
+
+    // Now insert card details with the order ID
     await pool.request()
-    .input('userId', sql.UniqueIdentifier, user)
-    .input('cardNumber', sql.Char(16), cardNumber)
-    .input('cvc', sql.Char(4), cvc)
-    .input('expiryDate', sql.Date, expiryDate)  
-    .input('cardType', sql.VarChar(50), cardType)
-    .query(`
-        INSERT INTO card_details (user_id, c_number, cvc, expiry_date, type)
-        VALUES (@userId, @cardNumber, @cvc, @expiryDate, @cardType)
-    `);
+        .input('userId', sql.UniqueIdentifier, user)
+        .input('orderId', sql.Int, orderId)
+        .input('cardNumber', sql.Char(16), cardNumber)
+        .input('cvc', sql.Char(4), cvc)
+        .input('expiryDate', sql.Date, expiryDate)  
+        .input('cardType', sql.VarChar(50), cardType)
+        .query(`
+            INSERT INTO card_details (user_id, o_id, c_number, cvc, expiry_date, type)
+            VALUES (@userId, @orderId, @cardNumber, @cvc, @expiryDate, @cardType)
+        `);
 
-
-        // Save into payment table
-        await pool.request()
-            .input('billId', sql.Int, parseInt(billId))
-            .input('paymentMethod', sql.VarChar(50), paymentMethod)
-            .query(`
-                INSERT INTO payment (bill_id, p_method)
-                VALUES (@billId, @paymentMethod)
-            `);
+    // Save into payment table
+    await pool.request()
+        .input('billId', sql.Int, parseInt(billId))
+        .input('paymentMethod', sql.VarChar(50), paymentMethod)
+        .query(`
+            INSERT INTO payment (bill_id, p_method)
+            VALUES (@billId, @paymentMethod)
+        `);
 
         res.redirect(`/order/confirmation/${billId}`);
 

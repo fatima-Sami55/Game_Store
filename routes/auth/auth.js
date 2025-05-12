@@ -59,7 +59,7 @@ router.get('/admin-dashboard', async (req, res) => {
     // Combine and format activities
     const activities = [
       ...recentOrdersResult.recordset.map(row => ({
-        type: 'order',
+        type: 'shopping-cart',
         description: `New order #${row.order_id} (Status: ${row.status}) placed by user ${row.user_id}`,
         timestamp: row.created_at
       })),
@@ -69,8 +69,8 @@ router.get('/admin-dashboard', async (req, res) => {
         timestamp: row.created_at
       })),
       ...recentPaymentsResult.recordset.map(row => ({
-        type: 'payment',
-        description: `Payment #${row.payment_id} of $${row.amount} (Method: ${row.method}) received`,
+        type: 'credit-card',
+        description: `Payment #${row.payment_id} of (Method: ${row.method}) received`,
         timestamp: row.created_at
       }))
     ]

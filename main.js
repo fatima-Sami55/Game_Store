@@ -43,7 +43,7 @@ app.use(helmet({
       fontSrc: [
         "'self'",
         "https://fonts.gstatic.com",
-        "https://cdnjs.cloudflare.com" // 👈 Add this too for fonts if needed
+        "https://cdnjs.cloudflare.com" // Add this too for fonts if needed
       ],
       imgSrc: ["'self'", "data:", "https:"],
       connectSrc: ["'self'"]
