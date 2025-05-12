@@ -54,6 +54,12 @@ body {
     text-decoration: none;
 }
 
+.logo img {
+    margin-right: 15px; /* Space between logo image and text */
+    width: 30px;
+    height: 30px;
+}
+
 .logo span {
     color: var(--accent);
 }

@@ -457,3 +457,8 @@ body {
         width: 100%;
     }
 }
+
+        .logo img {
+    margin-right: 15px; /* Space between logo image and text */
+    width: 30px;
+}
