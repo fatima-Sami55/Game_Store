@@ -6,6 +6,7 @@
   global.db = require('./database/db');
   require('dotenv').config();
   const helmet = require('helmet'); 
+  const cors = require('cors');
 
   // Set the port
   const PORT = process.env.PORT || 3000;
@@ -42,6 +43,7 @@
   const orderRoutes = require('./routes/order/order.js');
   const paymentRoutes = require('./routes/payment/payment.js');
 
+  const supportRoute = require('./routes/support/support');
 
   // // Use routes
   app.use('/', authRoutes);
@@ -49,6 +51,7 @@
   app.use('/cart', cartRoutes);
   app.use('/order', orderRoutes);
   app.use('/payment', paymentRoutes);
+  app.use('/support', supportRoute);
 
   app.get('/', (req, res) => {
     res.redirect('/home'); // or directly render the homepage

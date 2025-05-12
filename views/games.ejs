@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Games - GameVault</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="/css/games-styles.css">
+</head>
+<body>
+    <!-- Navbar from home page -->
+    <nav class="navbar">
+        <a href="/" class="logo">
+            <span class="logo-icon">🎮</span>
+            Game<span>Vault</span>
+        </a>
+        
+        <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/games" class="active">Games</a></li>
+            <li><a href="/support/support">Support</a></li>
+        </ul>
+        
+        <div class="nav-actions">
+            <!-- Cart Icon with Counter -->
+            <a href="/cart" class="cart-icon-wrapper">
+                <div class="cart-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    <span class="cart-count" id="cart-count">0</span>
+                </div>
+            </a>
+            
+            <div class="auth-buttons">
+                <% if (locals.user) { %>
+                    <!-- User is logged in, show welcome message and logout button -->
+                    <span class="user-welcome">Welcome, <%= user.name %></span>
+                    <form action="/logout" method="get" class="logout-form">
+                        <button type="submit" class="btn btn-login">Logout</button>
+                    </form>
+                <% } else { %>
+                    <!-- User is not logged in, show login and register buttons -->
+                    <a href="/login" class="btn btn-login">Login</a>
+                    <a href="/register" class="btn btn-register">Register</a>
+                <% } %>
+            </div>
+        </div>
+        
+        <div class="hamburger">
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 class="page-title">Browse Games</h1>
+
+        <div class="filters">
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label class="filter-label">Genre</label>
+                    <select class="filter-select" id="genreFilter">
+                        <option value="">All Genres</option>
+                        <option value="Action">Action</option>
+                        <option value="Adventure">Adventure</option>
+                        <option value="RPG">RPG</option>
+                        <option value="Strategy">Strategy</option>
+                        <option value="Sports">Sports</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Price Range</label>
+                    <select class="filter-select" id="priceFilter">
+                        <option value="">All Prices</option>
+                        <option value="0-20">Under $20</option>
+                        <option value="20-40">$20 - $40</option>
+                        <option value="40-60">$40 - $60</option>
+                        <option value="60+">$60+</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Sort By</label>
+                    <select class="filter-select" id="sortBy">
+                        <option value="name">Name</option>
+                        <option value="price-asc">Price: Low to High</option>
+                        <option value="price-desc">Price: High to Low</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="games-grid" id="games-container">
+            <div class="loading">Loading games...</div>
+        </div>
+    </div>
+
+    <div class="modal" id="addToCartModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Add to Cart</h2>
+                <button class="close-modal" data-action="close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <img id="modalGameImage" alt="" class="modal-game-image">
+                <div class="modal-game-info">
+                    <h3 id="modalGameName"></h3>
+                    <p id="modalGamePrice" class="modal-game-price"></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="number" class="quantity-input" id="quantity" value="1" min="1">
+                <button class="modal-btn cancel-btn" data-action="close">Cancel</button>
+                <button class="modal-btn confirm-btn" data-action="add">AddToCart</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/games.js"></script>
+</body>
+</html>
