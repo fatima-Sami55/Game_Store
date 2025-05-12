@@ -154,7 +154,7 @@ router.post('/register',redirectIfAuthenticated, async (req, res) => {
   try{
     await poolConnect;
     const request = pool.request();
-    request.input('uuid', sql.UniqueIdentifier, userid)
+    request.input('uuid', sql.UniqueIdentifier, userId)
     request.input('name', sql.VarChar(100), name);
     request.input('email', sql.VarChar(100), email);
     request.input('password', sql.VarChar(100), hashedPassword);

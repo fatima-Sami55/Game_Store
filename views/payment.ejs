@@ -27,8 +27,7 @@
         <ul class="nav-links">
             <li><a href="/">Home</a></li>
             <li><a href="/games">Games</a></li>
-            <li><a href="#">Deals</a></li>
-            <li><a href="#">Support</a></li>
+            <li><a href="/support/support">Contact</a></li>
             
             <% if (user && user.role === 'admin') { %>
                 <li><a href="/admin-dashboard">Dashboard</a></li>
@@ -60,15 +59,22 @@
   <section class="orders-section">
     <div class="container">
         <h1 class="section-title">Payment</h1>
-        <p class="total-amount">Total Amount: <strong>
-         $<%= !isNaN(Number(totalAmount)) ? Number(totalAmount).toFixed(2) : '0.00' %>
+        <%
+  const subtotal = !isNaN(Number(totalAmount)) ? Number(totalAmount) : 0;
+  const tax = +(subtotal * 0.10).toFixed(2);
+  const grandTotal = +(subtotal + tax).toFixed(2);
+%>
 
-        </strong></p>
+       <p class="total-amount">Subtotal: <strong>$<%= subtotal.toFixed(2) %></strong></p>
+       <p class="total-amount">Tax (10%): <strong>$<%= tax.toFixed(2) %></strong></p>
+       <p class="total-amount">Total Amount: <strong>$<%= grandTotal.toFixed(2) %></strong></p>
+
 
 
         <form action="/payment/complete" method="POST" class="payment-form">
             <input type="hidden" name="billId" value="<%= billId %>">
-            <input type="hidden" name="totalAmount" value="<%= totalAmount %>">
+            <input type="hidden" name="totalAmount" value="<%= grandTotal.toFixed(2) %>">
+
 
 
             <div class="form-group">
@@ -161,6 +167,9 @@
 }
 
 </script>
+
+
+
 
 </body>
 </html>

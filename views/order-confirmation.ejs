@@ -11,7 +11,19 @@
         <p>Your order has been placed successfully.</p>
         <p><strong>Billing ID:</strong> <%= billingInfo.bill_id %></p>
         <p><strong>Status:</strong> <%= billingInfo.o_status %></p>
-        <p><strong>Total Paid:</strong> $<%= billingInfo.amount.toFixed(2) %></p>
+       <% 
+    let subtotal = 0;
+    items.forEach(item => {
+        subtotal += item.price * item.quantity;
+    });
+    let taxRate = 0.10;
+    let tax = subtotal * taxRate;
+    let total = subtotal + tax;
+%>
+
+
+<p><strong>Total Paid:</strong> $<%= total.toFixed(2) %></p>
+
         <p>Your tracking number: <%= billingInfo.tracking_number %></p>
 
 
