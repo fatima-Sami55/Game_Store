@@ -355,3 +355,8 @@ body {
         padding-top: 2rem;
     }
 }
+
+.logo img {
+    margin-right: 15px; /* Space between logo image and text */
+    width: 30px;
+}

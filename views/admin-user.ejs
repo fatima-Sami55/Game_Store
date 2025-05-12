@@ -7,19 +7,19 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/users.css">
+    <link rel="icon" type="image/png" href="/images/favi.png">
 </head>
 <body>
     <!-- Header -->
     <header class="header">
         <nav class="navbar">
             <a href="/" class="logo">
-                <span class="logo-icon">🎮</span>
+                <span class="logo-icon"><img src="/images/favi.png" alt="" width="30px" height="30px"></span>
                 Game<span>Vault</span>
             </a>
             <ul class="nav-links">
                 <li><a href="/">Home</a></li>
                 <li><a href="/games">Games</a></li>
-                <li><a href="/support/support">Contact</a></li>
                 <% if (user && user.role === 'admin') { %>
                     <li><a href="/admin-dashboard">Dashboard</a></li>
                 <% } %>
@@ -45,14 +45,17 @@
         </nav>
     </header>
 
-    <!-- Main Content -->
-    <div class="container">
-        <div class="admin-header">
-            <h1>Manage Users</h1>
-            <p>View, edit, or delete user accounts.</p>
-        </div>
+   <!-- Main Content -->
+<div class="container">
+    <div class="admin-header">
+        <h1>Manage Users</h1>
+        <p>View, edit, or delete user accounts.</p>
+    </div>
 
-        <!-- Users Table -->
+    <!-- Users Table -->
+    <% const regularUsers = users.filter(u => u.role === 'user'); %>
+
+    <% if (regularUsers.length > 0) { %>
         <div class="users-table">
             <table>
                 <thead>
@@ -65,56 +68,27 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <% if (users && users.length > 0) { %>
-                        <% users.forEach(user => { %>
-                            <tr>
-                                <td><%= user.uuid %></td>
-                                <td><%= user.name %></td>
-                                <td><%= user.email %></td>
-                                <td><%= user.role %></td>
-                                <td>
-                                    <button class="btn btn-edit" onclick="openEditModal('<%= user.id %>', '<%= user.name %>', '<%= user.email %>', '<%= user.role %>')"><i class="fas fa-edit"></i> Edit</button>
-                                    <button type="submit" class="btn btn-delete"><i class="fas fa-trash"></i> Delete</button>
-                                 
-                                </td>
-                            </tr>
-                        <% }) %>
-                    <% } else { %>
+                    <% regularUsers.forEach(user => { %>
                         <tr>
-                            <td colspan="5">No users found.</td>
+                            <td><%= user.uuid %></td>
+                            <td><%= user.name %></td>
+                            <td><%= user.email %></td>
+                            <td><%= user.role %></td>
+                            <td>
+                                <form method="POST" action="/admin-user/delete" onsubmit="return confirm('Are you sure?')">
+                                    <input type="hidden" name="uuid" value="<%= user.uuid %>">
+                                    <button type="submit" class="btn btn-delete"><i class="fas fa-trash"></i> Delete</button>
+                                </form>
+                            </td>
                         </tr>
-                    <% } %>
+                    <% }); %>
                 </tbody>
             </table>
         </div>
-    </div>
-
-    <!-- Edit User Modal -->
-    <div class="modal" id="edit-modal">
-        <div class="modal-content">
-            <span class="modal-close" onclick="closeEditModal()">&times;</span>
-            <h2>Edit User</h2>
-            <form id="edit-user-form" method="POST">
-                <input type="hidden" id="edit-user-id" name="id">
-                <div class="form-group">
-                    <label for="edit-user-name">Name</label>
-                    <input type="text" id="edit-user-name" name="name" required>
-                </div>
-                <div class="form-group">
-                    <label for="edit-user-email">Email</label>
-                    <input type="email" id="edit-user-email" name="email" required>
-                </div>
-                <div class="form-group">
-                    <label for="edit-user-role">Role</label>
-                    <select id="edit-user-role" name="role" required>
-                        <option value="user">User</option>
-                        <option value="admin">Admin</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-save">Save Changes</button>
-            </form>
-        </div>
-    </div>
+    <% } else { %>
+        <p style="text-align: center;">No users registered.</p>
+    <% } %>
+</div>
 
     <!-- Footer -->
     <footer class="footer">

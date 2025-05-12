@@ -53,7 +53,10 @@ router.get('/cart', isAuthenticated, async (req, res) => {
                 WHERE cp.cart_id = @cartId
             `);
 
-        res.json(cartItems.recordset);
+            const updatedCartItems = cartItems.recordset.map(item => ({...item, img: `/uploads/${item.img}`}));
+
+
+        res.json(updatedCartItems);
     } catch (error) {
         console.error('Error fetching cart:', error);
         res.status(500).json({ error: 'Error fetching cart' });
