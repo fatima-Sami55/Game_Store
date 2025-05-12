@@ -170,8 +170,11 @@ body {
 .logo {
     font-size: 1.5rem;
     font-weight: 700;
-    color: var(--accent);
     text-decoration: none;
+    color: var(--light);
+}
+.logo span {
+    color: var(--accent);
 }
 
 .logo-icon {
@@ -236,18 +239,15 @@ body {
 }
 
 .btn-login {
-    background: var(--accent);
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    border: none;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+    color: var(--light);
+    margin-right: 1rem;
+    border: 2px solid rgba(237, 242, 244, 0.3);
+    background: transparent;
 }
 
 .btn-login:hover {
-    background-color: var(--accent-hover);
+    background: rgba(237, 242, 244, 0.1);
+    border-color: var(--light);
 }
 
 .btn-register {

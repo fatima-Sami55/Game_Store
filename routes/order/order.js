@@ -75,10 +75,11 @@ router.post('/place', async (req, res) => {
          const billingResult = await pool.request()
     .input('userId', sql.UniqueIdentifier, userId)
     .input('amount', sql.Decimal(10, 2), totalAmount)
+    .input('date', sql.DateTime, new Date())
     .query(`
-        INSERT INTO billing (user_id, amount)
+        INSERT INTO billing (user_id, amount, date)
         OUTPUT INSERTED.bill_id
-        VALUES (@userId, @amount)
+        VALUES (@userId, @amount, @date)
     `);
 
      const billId = billingResult.recordset[0].bill_id; // use this generated ID for next steps
@@ -173,7 +174,6 @@ router.get('/confirmation/:billId', async (req, res) => {
         );
     `);
 
-
         // ✅ Step 2: Fetch updated billing and order info
         const billingResult = await pool.request()
             .input('billId', sql.Int, billId)
@@ -232,6 +232,36 @@ router.get('/confirmation/:billId', async (req, res) => {
             billingInfo,
             items
         });
+
+         // ✅ Step 1.5: Clear the cart after order confirmation
+         const currentCartResult = await pool.request()
+         .input('userId', sql.UniqueIdentifier, userId)
+         .query(`
+             SELECT TOP 1 cart_id
+             FROM cart
+             WHERE user_id = @userId
+             ORDER BY cart_id DESC
+         `);
+
+        if (currentCartResult.recordset.length > 0) {
+            const cartId = currentCartResult.recordset[0].cart_id;
+            
+            // Delete cart products first (due to foreign key constraint)
+            await pool.request()
+                .input('cartId', sql.Int, cartId)
+                .query(`
+                    DELETE FROM cart_products
+                    WHERE cart_id = @cartId
+                `);
+
+            // Then delete the cart
+            await pool.request()
+                .input('cartId', sql.Int, cartId)
+                .query(`
+                    DELETE FROM cart
+                    WHERE cart_id = @cartId
+                `);
+        }
 
     } catch (err) {
         console.error("❌ Error loading confirmation page:", err);

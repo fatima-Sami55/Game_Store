@@ -76,22 +76,19 @@ if (repeatedDigits.test(cardNumber)) {
         billId,
         user,
     });
-    
-    
-}
+    }
         
 
-        // Save card details
-      await pool.request()
+    // Save card details
+    await pool.request()
     .input('userId', sql.UniqueIdentifier, user)
     .input('cardNumber', sql.Char(16), cardNumber)
     .input('cvc', sql.Char(4), cvc)
-    .input('expiryDate', sql.Date, expiryDate)
-    // .input('cardName', sql.VarChar(100), cardName) // remove or comment out this line
+    .input('expiryDate', sql.Date, expiryDate)  
     .input('cardType', sql.VarChar(50), cardType)
     .query(`
-        INSERT INTO card_details (user_id, c_number, cvc, expiry_date, c_name, type)
-        VALUES (@userId, @cardNumber, @cvc, @expiryDate, NULL, @cardType)
+        INSERT INTO card_details (user_id, c_number, cvc, expiry_date, type)
+        VALUES (@userId, @cardNumber, @cvc, @expiryDate, @cardType)
     `);
 
 
