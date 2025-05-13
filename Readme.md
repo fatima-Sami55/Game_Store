@@ -25,7 +25,7 @@ The goal is to develop a Game Store platform with features like:
 
 ### ✅ Database Design & Setup
 
-- Schema Design (Users, Games, Orders, Payments, Inventory)
+- Schema Design (Users, Games, Orders, Payments, Cart)
 - Relationships and normalization up to 3NF
 - SQL Queries for Table Creation
 - Views, Indexes, Joins, and Triggers

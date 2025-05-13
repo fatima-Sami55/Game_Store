@@ -467,3 +467,8 @@ body {
         gap: 0.5rem; /* Smaller gap on mobile if needed */
     }
 }
+
+.logo img {
+    margin-right: 15px; /* Space between logo image and text */
+    width: 30px;
+}

@@ -6,17 +6,17 @@
     <title>GameVault - Ultimate Game Store</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/home.css">
+    <link rel="icon" type="image/png" href="/images/favi.png">
 </head>
 <body>
     <!-- Navbar -->
     <nav class="navbar">
         <a href="/" class="logo">
-            <span class="logo-icon">🎮</span>
+            <span class="logo-icon"><img src="/images/favi.png" alt="" width="30px" height="30px"></span>
             Game<span>Vault</span>
         </a>
         
         <ul class="nav-links">
-            <li><a href="/">Home</a></li>
             <li><a href="/games">Games</a></li>
             <li><a href="/support/support">Contact</a></li>
             <% if (user && user.role === 'admin') { %>
@@ -79,6 +79,31 @@
         <div class="circle circle-2"></div>
     </section>
     
+<!-- Featured Games Section -->
+   <section class="featured-games">
+  <div class="section-header">
+    <h2 class="Featured"><span>Games - Coming Soon</span></h2>
+    <a href="/games" class="view-all">View All Games</a>
+  </div>
+  <div class="games-grid">
+    <% games.forEach(game => { %>
+      <div class="game-card">
+        <div class="game-image">
+          <img src="<%= game.image %>" alt="<%= game.title %>">
+        </div>
+        <div class="game-info">
+          <h3><%= game.title %></h3>
+          <p class="genre"><%= game.genre %></p>
+          <p class="price"><%= game.price %></p>
+          <p class="description"><%= game.description %></p>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+</section>
+
+
+
     <script>
         // Navbar scroll effect
         window.addEventListener('scroll', function() {

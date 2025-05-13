@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const sql = require('mssql');
 const { pool } = require('../../database/db');
 
 // Render games page
@@ -16,7 +15,7 @@ router.get('/games', async (req, res) => {
         let query = `
             SELECT pid, name, description, price, genre, status, img
             FROM product
-            WHERE status = 'active'
+            WHERE status = 'Available'
         `;
         
         const params = [];
@@ -63,11 +62,19 @@ router.get('/games', async (req, res) => {
         });
 
         const result = await request.query(query);
-        res.json(result.recordset);
+        
+        // Adjust image path for each game
+        const gamesWithAdjustedImagePaths = result.recordset.map(game => ({
+            ...game,
+            img: `/uploads/${game.img}` 
+        }));
+        
+        res.json(gamesWithAdjustedImagePaths);
     } catch (error) {
         console.error('Error fetching games:', error);
         res.status(500).json({ error: 'Error fetching games' });
     }
 });
+
 
 module.exports = router;
