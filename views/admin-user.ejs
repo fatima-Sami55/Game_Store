@@ -49,7 +49,7 @@
 <div class="container">
     <div class="admin-header">
         <h1>Manage Users</h1>
-        <p>View, edit, or delete user accounts.</p>
+        <p>Edit users role or delete users accounts.</p>
     </div>
 
     <!-- Users Table -->
@@ -75,10 +75,17 @@
                             <td><%= user.email %></td>
                             <td><%= user.role %></td>
                             <td>
-                                <form method="POST" action="/admin-user/delete" onsubmit="return confirm('Are you sure?')">
-                                    <input type="hidden" name="uuid" value="<%= user.uuid %>">
-                                    <button type="submit" class="btn btn-delete"><i class="fas fa-trash"></i> Delete</button>
-                                </form>
+                                <div class="btn-container">
+                                 <form method="POST" action="/admin-user/makeAdmin" class="make-admin-form">
+    <input type="hidden" name="uuid" value="<%= user.uuid %>">
+    <button type="submit" class="btn btn-makeadmin"><i class="fas fa-person"></i> Make Admin</button>
+</form>
+
+<form method="POST" action="/admin-user/delete" class="delete-user-form">
+    <input type="hidden" name="uuid" value="<%= user.uuid %>">
+    <button type="submit" class="btn btn-delete"><i class="fas fa-trash"></i> Delete</button>
+</form>
+                                </div>
                             </td>
                         </tr>
                     <% }); %>
@@ -86,7 +93,7 @@
             </table>
         </div>
     <% } else { %>
-        <p style="text-align: center;">No users registered.</p>
+        <p style="text-align: center;">No users exsist.</p>
     <% } %>
 </div>
 
@@ -117,34 +124,35 @@
         </div>
     </footer>
 
-    <script>
-        // Mobile Menu Toggle
-        document.querySelector('.hamburger').addEventListener('click', function() {
+   <script>
+
+ document.querySelectorAll('.make-admin-form').forEach(form => {
+    form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        if (confirm("Are you sure you want to make this user an admin?")) {
+            form.submit();
+        }
+    });
+});
+
+document.querySelectorAll('.delete-user-form').forEach(form => {
+    form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        if (confirm("Are you sure you want to delete this user?")) {
+            form.submit();
+        }
+    });
+});
+
+
+    const hamburger = document.querySelector('.hamburger');
+    if (hamburger) {
+        hamburger.addEventListener('click', function () {
             document.querySelector('.nav-links').classList.toggle('nav-active');
             this.classList.toggle('toggle');
         });
+    }
+</script>
 
-        // Modal Functions
-        function openEditModal(id, name, email, role) {
-            document.getElementById('edit-user-id').value = id;
-            document.getElementById('edit-user-name').value = name;
-            document.getElementById('edit-user-email').value = email;
-            document.getElementById('edit-user-role').value = role;
-            document.getElementById('edit-modal').style.display = 'block';
-            document.getElementById('edit-user-form').action = `/admin/users/${id}?_method=PUT`;
-        }
-
-        function closeEditModal() {
-            document.getElementById('edit-modal').style.display = 'none';
-        }
-
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const modal = document.getElementById('edit-modal');
-            if (event.target === modal) {
-                closeEditModal();
-            }
-        };
-    </script>
 </body>
 </html>

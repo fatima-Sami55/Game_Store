@@ -112,10 +112,12 @@ if (repeatedDigits.test(cardNumber)) {
     await pool.request()
         .input('billId', sql.Int, parseInt(billId))
         .input('paymentMethod', sql.VarChar(50), paymentMethod)
+        .input('orderId', sql.Int, orderId)  
         .query(`
-            INSERT INTO payment (bill_id, p_method)
-            VALUES (@billId, @paymentMethod)
+                INSERT INTO payment (bill_id, p_method, o_id)
+                VALUES (@billId, @paymentMethod, @orderId)
         `);
+
 
         res.redirect(`/order/confirmation/${billId}`);
 

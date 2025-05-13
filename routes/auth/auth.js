@@ -51,7 +51,7 @@ router.get('/admin-dashboard', async (req, res) => {
 
     // Fetch recent payments
     const recentPaymentsResult = await pool.request().query(`
-      SELECT TOP 3 pid AS payment_id, bill_id, p_method AS method, created_at 
+      SELECT TOP 3 p_id AS payment_id, bill_id, p_method AS method, created_at 
       FROM dbo.payment 
       ORDER BY created_at DESC
     `);
@@ -131,6 +131,24 @@ router.post('/admin-user/delete', isAuthenticated, isAdmin, async (req, res) => 
     }
 });
 
+router.post('/admin-user/makeAdmin', isAuthenticated, isAdmin, async (req, res) => {
+    try {
+        await poolConnect;
+
+        const { uuid } = req.body;
+
+    await pool.request()
+    .input('uuid', sql.UniqueIdentifier, uuid)
+    .query("UPDATE Users SET role = 'admin' WHERE uuid = @uuid");
+
+
+        res.redirect('/admin-user');
+    } catch (err) {
+        console.error('❌ Error updating user:', err);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
 router.get('/admin-products', isAuthenticated, isAdmin, async (req, res) => {
         res.render('ProductForm');
 });
@@ -164,6 +182,87 @@ router.post('/admin-products/add', isAuthenticated, isAdmin, upload.single('imag
         res.status(500).send('Something went wrong while adding the product');
     }
 });
+
+router.get('/admin-products/manage', isAuthenticated, isAdmin, async (req, res) => {
+    const user = req.session.user
+    await poolConnect;
+
+    try {
+        const result = await pool.request().query('SELECT * FROM Product');
+        const products = result.recordset;
+        res.render('manageProducts', { products, user });
+    } catch (err) {
+        console.error('Database error:', err);
+        res.status(500).send('Something went wrong while fetching products');
+    }
+});
+
+router.post('/products/delete/:id', isAuthenticated, isAdmin, async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        // Delete the product by its ID
+        await pool.request()
+            .input('id', sql.Int, id)
+            .query('DELETE FROM Product WHERE pid = @id');
+        
+        res.redirect('/admin-products/manage');
+    } catch (err) {
+        console.error('Database error:', err);
+        res.status(500).send('Something went wrong while deleting the product');
+    }
+});
+
+router.get('/products/edit/:id', isAuthenticated, isAdmin, async (req, res) => {
+    const user = req.user;
+    const id = req.params.id;
+
+    try {
+        const result = await pool.request()
+            .input('id', sql.Int, id)
+            .query('SELECT * FROM Product WHERE pid = @id');
+        
+        const product = result.recordset[0]; 
+
+        if (!product) {
+            return res.status(404).send("Product not found");
+        }
+        res.render("editProduct", { user, product });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Server Error");
+    }
+});
+
+router.post('/products/edit/:id', isAuthenticated, isAdmin, upload.single('img'), async (req, res) => {
+    const id = req.params.id;
+    const { name, description, price, genre, status } = req.body;
+    const image = req.file ? req.file.filename : req.body.img; 
+
+    try {
+        await pool.request()
+    .input('pid', sql.Int, id)
+    .input('name', sql.NVarChar(255), name)
+    .input('description', sql.NVarChar(sql.MAX), description)
+    .input('price', sql.Decimal(10, 2), price)
+    .input('genre', sql.NVarChar(100), genre)
+    .input('status', sql.NVarChar(50), status)
+    .input('img', sql.NVarChar(255), image)
+    .query(`
+        UPDATE Product
+        SET name = @name, description = @description, price = @price, genre = @genre, status = @status, img = @img
+        WHERE pid = @pid
+    `).then(result => {
+        console.log('Rows affected:', result.rowsAffected);
+    });
+
+        res.redirect('/admin-products/manage');
+    } catch (err) {
+        console.error('Database error:', err);
+        res.status(500).send('Something went wrong while updating the product');
+    }
+});
+
 
 
 //get requests

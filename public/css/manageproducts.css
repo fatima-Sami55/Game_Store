@@ -82,7 +82,7 @@ body {
     bottom: -5px;
     left: 0;
     background-color: var(--accent);
-    transition: width 0.3s ease;
+    transition: width 0.3ازs ease;
 }
 
 .nav-links a:hover::after {
@@ -95,38 +95,32 @@ body {
     gap: 1.5rem;
 }
 
-
-/* Update .auth-buttons to ensure consistent spacing */
 .auth-buttons {
     display: flex;
     align-items: center;
-    gap: 1rem; /* Add gap for consistent spacing between elements */
+    gap: 1rem;
 }
 
-/* Update .user-welcome for explicit spacing */
 .user-welcome {
     color: var(--light);
     font-weight: 500;
     font-size: 0.9rem;
     opacity: 0.9;
-    margin-right: 1rem; /* Retain existing margin for safety */
+    margin-right: 1rem;
 }
 
-/* Ensure logout button has no unwanted margins */
 .btn-login {
     color: var(--light);
     border: 2px solid rgba(237, 242, 244, 0.3);
     background: transparent;
-    padding: 0.6rem 1.5rem; /* Ensure consistent padding */
-    margin: 0; /* Remove any default margins */
+    padding: 0.6rem 1.5rem;
+    margin: 0;
 }
 
-/* Adjust .logout-form to prevent extra spacing */
 .logout-form {
     display: inline-flex;
-    margin: 0; /* Prevent form from adding spacing */
+    margin: 0;
 }
-
 
 .btn {
     padding: 0.6rem 1.5rem;
@@ -193,7 +187,7 @@ body {
     color: var(--light);
 }
 
-.users-table {
+.products-table {
     background: rgba(26, 26, 46, 0.8);
     padding: 20px;
     border-radius: 10px;
@@ -201,33 +195,27 @@ body {
     margin: 0 20px;
 }
 
-.users-table table {
+.products-table table {
     width: 100%;
     border-collapse: collapse;
 }
 
-.users-table th, .users-table td {
+.products-table th, .products-table td {
     padding: 10px;
     text-align: left;
     border-bottom: 1px solid rgba(237, 242, 244, 0.1);
 }
 
-.users-table th {
+.products-table th {
     font-weight: 600;
     color: var(--light);
 }
 
-.users-table td {
+.products-table td {
     color: var(--secondary);
 }
 
-.btn-container {
-    display: flex;
-    gap: 10px; 
-    align-items: center; 
-}
-
-.btn-makeadmin {
+.btn-edit {
     background: var(--accent);
     color: white;
     border: none;
@@ -236,7 +224,7 @@ body {
     cursor: pointer;
 }
 
-.btn-makeadmin:hover {
+.btn-edit:hover {
     background: var(--accent-hover);
 }
 
@@ -253,6 +241,41 @@ body {
     background: #bd2130;
 }
 
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1001;
+}
+
+.modal-content {
+    position: relative;
+    background: rgba(26, 26, 46, 0.95);
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 500px;
+    box-shadow: var(--box-shadow);
+}
+
+.modal-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 2rem;
+    cursor: pointer;
+    color: var(--light);
+}
+
+.modal-close:hover {
+    color: var(--accent);
+}
 
 .form-group {
     margin-bottom: 20px;
