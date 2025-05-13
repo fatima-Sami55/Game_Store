@@ -165,10 +165,9 @@ async function clearCart() {
 
 // Checkout
 function checkout() {
-    // Implement checkout logic here
-    showSuccess('Checkout functionality coming soon!');
-    clearCart();
+    window.location.href = "/order";  // Redirect to order page
 }
+
 
 // Update cart count in navbar
 async function updateCartCount() {

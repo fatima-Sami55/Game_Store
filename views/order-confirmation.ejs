@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Confirmation - GameVault</title>
+    <link rel="stylesheet" href="/css/Confirmation.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🎉 Thank you, <%= user.name %>!</h1>
+        <p>Your order has been placed successfully.</p>
+        <p><strong>Billing ID:</strong> <%= billingInfo.bill_id %></p>
+        <p><strong>Status:</strong> <%= billingInfo.o_status %></p>
+       <% 
+    let subtotal = 0;
+    items.forEach(item => {
+        subtotal += item.price * item.quantity;
+    });
+    let taxRate = 0.10;
+    let tax = subtotal * taxRate;
+    let total = subtotal + tax;
+%>
+
+
+<p><strong>Total Paid:</strong> $<%= total.toFixed(2) %></p>
+
+        <p>Your tracking number: <%= billingInfo.tracking_number %></p>
+
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Qty</th>
+                    <th>Price</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% items.forEach(item => { %>
+                    <tr>
+                        <td><%= item.name %></td>
+                        <td><%= item.quantity %></td>
+                        <td>$<%= item.price.toFixed(2) %></td>
+                        <td>$<%= (item.price * item.quantity).toFixed(2) %></td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+
+        <a href="/" class="btn">Return to Home</a>
+    </div>
+</body>
+</html>

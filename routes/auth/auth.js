@@ -59,7 +59,7 @@ router.get('/admin-dashboard', async (req, res) => {
     // Combine and format activities
     const activities = [
       ...recentOrdersResult.recordset.map(row => ({
-        type: 'order',
+        type: 'shopping-cart',
         description: `New order #${row.order_id} (Status: ${row.status}) placed by user ${row.user_id}`,
         timestamp: row.created_at
       })),
@@ -69,8 +69,8 @@ router.get('/admin-dashboard', async (req, res) => {
         timestamp: row.created_at
       })),
       ...recentPaymentsResult.recordset.map(row => ({
-        type: 'payment',
-        description: `Payment #${row.payment_id} of $${row.amount} (Method: ${row.method}) received`,
+        type: 'credit-card',
+        description: `Payment #${row.payment_id} of (Method: ${row.method}) received`,
         timestamp: row.created_at
       }))
     ]
@@ -205,8 +205,12 @@ router.post('/login',redirectIfAuthenticated, async (req, res) => {
 
     const result = await request.query(`SELECT * FROM users WHERE email = @email`);
     const user = result.recordset[0];
+    if (!user) {
+      return res.status(401).send('❌ Invalid email or password');
+    }
 
-    if (!user || !(await bcrypt.compare(password, user.password))) {
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) {
       return res.status(401).send('❌ Invalid email or password');
     }
 
@@ -217,15 +221,8 @@ router.post('/login',redirectIfAuthenticated, async (req, res) => {
       role: user.role 
     };
 
-    console.log(`✅ Logged in as: ${user.email}`);
-    
-    // Redirect to Admin Dashboard if user is an admin
-    if (user.role === 'admin') {
-      return res.redirect('/admin-dashboard'); 
-    }
-
-    // Redirect to the home page for other users
-    res.redirect('/home');
+    console.log(`✅ Logged in: ${user.email}`);
+    res.redirect('/');
   } catch (err) {
     console.error('❌ Login Error:', err);
     res.status(500).send('Internal Server Error');
@@ -242,32 +239,22 @@ router.post('/register',redirectIfAuthenticated, async (req, res) => {
 
   const userId = uuidv4();
   const hashedPassword = await bcrypt.hash(password, 10);
-
-  try {
+  try{
     await poolConnect;
-
     const request = pool.request();
-    request.input('uuid', sql.UniqueIdentifier, userId);
-    request.input('name', sql.VarChar(100), name.trim());
-    request.input('email', sql.VarChar(100), email.trim());
+    request.input('uuid', sql.UniqueIdentifier, userId)
+    request.input('name', sql.VarChar(100), name);
+    request.input('email', sql.VarChar(100), email);
     request.input('password', sql.VarChar(100), hashedPassword);
     request.input('phone_number', sql.VarChar(15), phone_number.trim());
     request.input('role', sql.VarChar(20), 'user'); // 👈 default role
 
     await request.query(`
-      INSERT INTO users (uuid, name, email, password, phone_number, role)
-      VALUES (@uuid, @name, @email, @password, @phone_number, @role)
+      INSERT INTO users (uuid, name, email, password, phone_number)
+      VALUES (@uuid, @name, @email, @password, @phone_number)
     `);
 
-    // Auto login
-    req.session.user = {
-      uuid: userId,
-      name: name.trim(),
-      email: email.trim(),
-      role: 'user'
-    };
-
-    console.log(`✅ Registered & auto-logged in: ${email}`);
+    console.log(`Registered: ${name}, successfully`);
     res.redirect('/');
   } catch (err) {
     if (err.originalError?.info?.number === 2627) {
@@ -276,7 +263,8 @@ router.post('/register',redirectIfAuthenticated, async (req, res) => {
     console.error('❌ Registration Error:', err);
     res.status(500).send('Error registering user.');
   }
-});
+}
+)
 
 
 module.exports = router;

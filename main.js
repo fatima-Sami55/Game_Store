@@ -43,7 +43,7 @@ app.use(helmet({
       fontSrc: [
         "'self'",
         "https://fonts.gstatic.com",
-        "https://cdnjs.cloudflare.com" // 👈 Add this too for fonts if needed
+        "https://cdnjs.cloudflare.com" // Add this too for fonts if needed
       ],
       imgSrc: ["'self'", "data:", "https:"],
       connectSrc: ["'self'"]
@@ -156,12 +156,17 @@ const games = [
   const authRoutes = require('./routes/auth/auth');
   const gameRoutes = require('./routes/game/game');
   const cartRoutes = require('./routes/cart/cart');
+  const orderRoutes = require('./routes/order/order.js');
+  const paymentRoutes = require('./routes/payment/payment.js');
+
   const supportRoute = require('./routes/support/support');
 
   // // Use routes
   app.use('/', authRoutes);
   app.use('/games', gameRoutes);
   app.use('/cart', cartRoutes);
+  app.use('/order', orderRoutes);
+  app.use('/payment', paymentRoutes);
   app.use('/support', supportRoute);
 
   app.get('/', (req, res) => {
