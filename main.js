@@ -245,7 +245,7 @@ const games = [
   }
 ];
 
-     res.render('home', { user: req.session.user || null });
+    res.render('home', { user: req.session.user || null, games });
   });
   
 
