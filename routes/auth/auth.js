@@ -9,11 +9,11 @@ const { upload } = require('../../main');
 
 // ================== ADMIN Routes ==================
 
-router.get('/admin-dashboard', async (req, res) => {
+router.get('/admin-dashboard', isAuthenticated, isAdmin, async (req, res) => {
   await poolConnect; // ensures DB is connected
 
   try {
-    const user = req.user || { name: 'Admin' };
+    const user = req.session.user || { name: 'Admin' };
     const now = new Date();
     const currentDate = now.toLocaleDateString('en-US', {
       year: 'numeric',

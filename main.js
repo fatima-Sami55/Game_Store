@@ -160,7 +160,6 @@ const games = [
   const cartRoutes = require('./routes/cart/cart');
   const orderRoutes = require('./routes/order/order.js');
   const paymentRoutes = require('./routes/payment/payment.js');
-
   const supportRoute = require('./routes/support/support');
 
   // // Use routes
