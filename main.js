@@ -60,8 +60,6 @@ app.use(helmet({
   allowedHeaders: ['Content-Type'],
 };
 app.use(cors(corsOptions));
-  
-  app.use(cors(corsOptions));
 
   const storage = multer.diskStorage({
     destination: function (req, file, cb) {
