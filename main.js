@@ -51,15 +51,15 @@ app.use(helmet({
   }
 }));
 
-  const corsOptions = {
-  origin: [
-    'http://localhost:3000',
-    'https://gamevault-ggaqeea4g5e4cbau.canadacentral-01.azurewebsites.net'
-  ],
-  methods: ['GET', 'POST'],
-  allowedHeaders: ['Content-Type'],
-};
-app.use(cors(corsOptions));
+//   const corsOptions = {
+//   origin: [
+//     'http://localhost:3000',
+//     'https://gamevault-ggaqeea4g5e4cbau.canadacentral-01.azurewebsites.net'
+//   ],
+//   methods: ['GET', 'POST'],
+//   allowedHeaders: ['Content-Type'],
+// };
+// app.use(cors(corsOptions));
 
   const storage = multer.diskStorage({
     destination: function (req, file, cb) {
