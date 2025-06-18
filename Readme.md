@@ -1,4 +1,4 @@
-# 🎮 Game Store - Database Systems Project
+# 🎮 Game Store - Database Systems Project    ![MIT License](https://img.shields.io/badge/license-MIT-green.svg)
 
 A database-driven e-commerce web application for buying and selling games online. Built as part of the Database Systems course at FAST NUCES.
 
