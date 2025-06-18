@@ -67,9 +67,22 @@ The goal is to develop a Game Store platform with features like:
 
 ---
 
+## 🚀 Deployment
+
+The application was successfully deployed on **Azure App Service** with a cloud-hosted **Azure SQL Database**.
+
+### 🧩 Key Deployment Configurations:
+
+- **Hosting Platform:** Microsoft Azure (App Service)
+- **Database:** Azure SQL with firewall rules configured for remote access
+- **Environment Variables:** Stored securely in Azure App Settings
+- **Logging:** Enabled via Azure Log Stream for real-time debugging
+- **Media Uploads:** Handled via `multer` for local image uploads; can be extended to Azure Blob Storage
+
+> ⚠️ Note: Azure App Service does not support the `USE` SQL command for switching databases. A fresh DB connection must be made if accessing another DB.
+
+---
+
 ## 🧾 License
 
 This project is licensed under the [MIT License](./LICENSE) — feel free to use, modify, and distribute it.
-
-
-
