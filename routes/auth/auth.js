@@ -2,7 +2,7 @@ const express = require('express');
 const { pool, sql , poolConnect } = require('../../database/db');
 const { v4: uuidv4 } = require('uuid');
 const router = express.Router();
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const { isAuthenticated, isAdmin, redirectIfAuthenticated } = require('../../middleware/authChecks');
 const { upload } = require('../../main');
 
