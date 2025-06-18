@@ -67,5 +67,9 @@ The goal is to develop a Game Store platform with features like:
 
 ---
 
+## 🧾 License
+
+This project is licensed under the [MIT License](./LICENSE) — feel free to use, modify, and distribute it.
+
 
 
