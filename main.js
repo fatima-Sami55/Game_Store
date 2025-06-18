@@ -170,8 +170,7 @@ const games = [
   app.use('/support', supportRoute);
 
   app.get('/', (req, res) => {
-    res.redirect('/home'); // or directly render the homepage
-    // res.render('home', { user: req.session.user || null });
+     res.render('home', { user: req.session.user || null });
   });
   
 
